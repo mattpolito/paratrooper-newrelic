@@ -22,11 +22,16 @@ module Paratrooper
       end
 
       def setup(options = {})
-        %x[curl https://heroku.newrelic.com/accounts/#{account_id}/applications/#{application_id}/ping_targets/disable -X POST -H "X-Api-Key: #{api_key}"]
+        %x[curl #{core_ping_url('disable')}]
       end
 
       def teardown(options = {})
-        %x[curl https://heroku.newrelic.com/accounts/#{account_id}/applications/#{application_id}/ping_targets/enable -X POST -H "X-Api-Key: #{api_key}"]
+        %x[curl #{core_ping_url('enable')}]
+      end
+
+      private
+      def core_ping_url(type)
+        %Q[https://heroku.newrelic.com/accounts/#{account_id}/applications/#{application_id}/ping_targets/#{type} -X POST -H "X-Api-Key: #{api_key}"]
       end
     end
   end
